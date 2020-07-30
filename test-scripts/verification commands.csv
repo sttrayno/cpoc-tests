@@ -1,0 +1,145 @@
+show clock
+show running-config
+show ntp status
+show ntp association
+show version
+show inventory
+show redundancy
+show boot
+show int status
+show int description
+show cdp neighbors detail
+show lldp neighbors detail
+show mac address-table
+show spanning-tree
+show vlan
+show interfaces
+show ip int brief
+show mpls interfaces
+show mpls forwarding-table
+show int trunk
+show etherchannel summary
+show ip proto
+show ip ospf
+show ip ospf neighbor detail
+show vrf
+show mac add
+show ip route sum
+show vrf
+show ip mroute
+show bgp all summary
+show bgp vpnv4 unicast all summary
+show ip route summary
+show bgp all
+show bgp all detail
+show vrf detail
+show ip pim interface detail
+show ip arp vrf ERSPAN
+show ip arp vrf brd-dv
+show ip arp vrf brd-qa
+show ip arp vrf bvm-dv
+show ip arp vrf bvm-qa
+show ip arp vrf bvm-ut
+show ip arp vrf cds-dv
+show ip arp vrf cds-qa
+show ip arp vrf cds-ut
+show ip arp vrf cdv-dv
+show ip arp vrf cdx-qa
+show ip arp vrf customer-edge
+show ip arp vrf dev-tools-dv
+show ip arp vrf dhb-dv
+show ip arp vrf dhb-ut
+show ip arp vrf eco-dv
+show ip arp vrf eco-qa
+show ip arp vrf edm-dv
+show ip arp vrf edm-qa
+show ip arp vrf egs-dv
+show ip arp vrf egs-qa
+show ip arp vrf egs-ut
+show ip arp vrf ejc-dv
+show ip arp vrf ejc-qa
+show ip arp vrf eqt-dv
+show ip arp vrf eqt-qa
+show ip arp vrf etf-dv
+show ip arp vrf etf-qa
+show ip arp vrf fmk-dv
+show ip arp vrf fmk-ut
+show ip arp vrf fxs-dv
+show ip arp vrf fxs-qa
+show ip arp vrf fxs-ut
+show ip arp vrf hpi-dv
+show ip arp vrf hpi-qa
+show ip arp vrf idx-dev
+show ip arp vrf idx-qa
+show ip arp vrf ihsm-iba
+show ip arp vrf jira-dv
+show ip arp vrf mca-dv
+show ip arp vrf mca-qa
+show ip arp vrf mca-ut
+show ip arp vrf mcp-dv
+show ip arp vrf mcp-qa
+show ip arp vrf mcp-ut
+show ip arp vrf mer-dv
+show ip arp vrf met-dv
+show ip arp vrf met-qa
+show ip arp vrf met-ut
+show ip arp vrf mim-qa
+show ip arp vrf mkapp-prod
+show ip arp vrf mkt-core
+show ip arp vrf mkt-mgmt
+show ip arp vrf mkt-splunk-db
+show ip arp vrf mkt-storage
+show ip arp vrf mnb-dv
+show ip arp vrf mnb-qa
+show ip arp vrf mqs-dv
+show ip arp vrf mqs-ut
+show ip arp vrf mrd-dv
+show ip arp vrf mrd-qa
+show ip arp vrf msa-dv
+show ip arp vrf msa-qa
+show ip arp vrf msf-dv
+show ip arp vrf msf-qa
+show ip arp vrf msf-ut
+show ip arp vrf msv-dv
+show ip arp vrf mtm-dv
+show ip arp vrf mtm-qa
+show ip arp vrf mtm-ut
+show ip arp vrf mww-dv
+show ip arp vrf mww-qa
+show ip arp vrf mww-ut
+show ip arp vrf nft-dv
+show ip arp vrf odc-dv
+show ip arp vrf odc-qa
+show ip arp vrf odc-ut
+show ip arp vrf odd-dv
+show ip arp vrf odd-qa
+show ip arp vrf osp-dv
+show ip arp vrf osp-infradv
+show ip arp vrf osp-qa
+show ip arp vrf pc-underlay
+show ip arp vrf pev-dv
+show ip arp vrf pev-qa
+show ip arp vrf pev-ut
+show ip arp vrf poc-dv
+show ip arp vrf pvl-dv
+show ip arp vrf pvl-qa
+show ip arp vrf pvl-ut
+show ip arp vrf rtb-dv
+show ip arp vrf rtb-qa
+show ip arp vrf rtb-ut
+show ip arp vrf ssc-dv
+show ip arp vrf ssc-infra
+show ip arp vrf ssc-its-qa
+show ip arp vrf ssc-prod
+show ip arp vrf ssc-qa
+show ip arp vrf str-dv
+show ip arp vrf str-qa
+show ip arp vrf tax-ut
+show ip arp vrf tdl-dv
+show ip arp vrf tdl-qa
+show ip arp vrf ttm-dv
+show ip arp vrf ttm-qa
+show ip arp vrf ttm-ut
+show ip arp vrf uxs-ut
+show ip arp vrf whs-dv
+show ip arp vrf whs-qa
