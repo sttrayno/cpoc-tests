@@ -42,7 +42,6 @@ def returnLL(arpTable):
         for ipkey in arpTable['interfaces'][key]['ipv4']['neighbors']:
             ll = arpTable['interfaces'][key]['ipv4']['neighbors'][ipkey]['link_layer_address']
             mac_addr.append(ll)
-            mac_addr.sort()
     return mac_addr
 
 predirectory = os.listdir(directory)
@@ -87,6 +86,12 @@ for filename in os.listdir(directory):
 
                 count = count + 1
 
+
+        print('=============================================================')
+        print('===================== '+ device_name + ' tests ===============')
+
+
+
         with open(post_filename, newline='') as f:
             output = f.read()
             a = output.find("% VRF")
@@ -100,10 +105,6 @@ for filename in os.listdir(directory):
                 post = len(output["interfaces"])
                 postIP = returnIP(output)
                 postMAC = returnLL(output)
-
-
-            print('=============================================================')
-            print('===================== '+ device_name + ' tests ===============')
 
 
             if pre == post:

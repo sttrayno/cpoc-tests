@@ -20,22 +20,14 @@ def isBlank(myString):
 print("Starting checks...")
 
 def returnPC(etherchannel_summary):
-    pc_name = []
+    pc_name = {}
     for key in etherchannel_summary['interfaces']:
-        for ipkey in etherchannel_summary['interfaces'][key]:
-            name = etherchannel_summary['interfaces'][key]['name']
-            pc_name.append(name)
+        name = etherchannel_summary['interfaces'][key]['name']
+        oper_status = etherchannel_summary['interfaces'][key]['oper_status']
+        pc_name[name] = oper_status
 
     return pc_name
 
-def oper_status(etherchannel_summary):
-    pc_status = []
-    for key in etherchannel_summary['interfaces']:
-        for ipkey in etherchannel_summary['interfaces'][key]:
-            name = etherchannel_summary['interfaces'][key]['oper_status']
-            pc_status.append(name)
-
-    return pc_status
 
 
 for filename in os.listdir(directory):
@@ -58,7 +50,6 @@ for filename in os.listdir(directory):
                 output = dev.parse(command, output=output)
                 pre = output["number_of_aggregators"]
                 pre_pc_name = returnPC(output)
-                pre_oper_status =oper_status(output)
                 count = count + 1
             else:
                 continue
@@ -69,7 +60,7 @@ for filename in os.listdir(directory):
                 output = dev.parse(command, output=output)
                 post = output["number_of_aggregators"]
                 post_pc_name = returnPC(output)
-                post_oper_status =oper_status(output)
+                print(post_pc_name)
             else:
                 continue
 
@@ -85,9 +76,5 @@ for filename in os.listdir(directory):
                 print("TEST 2 PASS")
             elif pre_pc_name != post_pc_name:
                 print("TEST 2 FAIL")
-            if pre_oper_status == post_oper_status:
-                print("TEST 3 PASS")
-            elif pre_oper_status != post_oper_status:
-                print("TEST 3 FAIL")
 
 print(str(count) + " files processed")

@@ -18,6 +18,15 @@ def isBlank(myString):
     return True
 print("Starting checks...")
 
+def getBGPneighbors(bgpSummary):
+    neighbors = []
+    for key in bgpSummary['vrf']['default']['neighbor']:
+        neighbor = key
+        neighbors.append(neighbor)
+        neighbors.sort()
+    return neighbors
+
+
 for filename in os.listdir(directory):
     if fnmatch.fnmatch(filename, "*show_bgp_all_summary*_RAW.txt"):
         pre_filename = directory + filename
@@ -38,18 +47,26 @@ for filename in os.listdir(directory):
             if  isBlank(output) == False:
                 output = dev.parse(command, output=output)
                 pre = len(output["vrf"]["default"]["neighbor"])
-                print(json.dumps(output))
+                preNeighbors = getBGPneighbors(output)
 
                 count = count + 1
 
             else:
                 continue
 
+
+        print('=============================================================')
+        print('===================== '+ device_name + ' tests ===============')
+
+
+
         with open(post_filename, newline='') as f:
             output = f.read()
             if isBlank(output) == False:
                 output = dev.parse(command, output=output)
                 post = len(output["vrf"]["default"]["neighbor"])
+                postNeighbors = getBGPneighbors(output)
+
             else:
                 continue
 
@@ -60,6 +77,13 @@ for filename in os.listdir(directory):
                 print("FAIL: BGP has gained a neighbor from upgrade on device: " + device_name)
             elif post < pre:
                 print("FAIL: BGP has lost a neighbor from upgrade on device: " + device_name)
+
+
+            if preNeighbors == postNeighbors:
+                print("PASS: BGP neigbors check on device: " + device_name + " both have consistent neighbors list")
+            elif preNeighbors != postNeighbors:
+                print("FAIL: BGP has neighbors list is inconsistent on device: " + device_name)
+
 
 
 
