@@ -1,6 +1,7 @@
 from genie.conf.base import Device
 import json
 import fnmatch
+import dictdiffer
 
 
 test1passcount = 0
@@ -28,21 +29,14 @@ def isBlank(myString):
     return True
 
 def returnIP(arpTable):
-    ip_addr = []
+    arp_table = {}
     for key in arpTable['interfaces']:
         for ipkey in arpTable['interfaces'][key]['ipv4']['neighbors']:
             ip = arpTable['interfaces'][key]['ipv4']['neighbors'][ipkey]['ip']
-            ip_addr.append(ip)
-
-    return ip_addr
-
-def returnLL(arpTable):
-    mac_addr = []
-    for key in arpTable['interfaces']:
-        for ipkey in arpTable['interfaces'][key]['ipv4']['neighbors']:
             ll = arpTable['interfaces'][key]['ipv4']['neighbors'][ipkey]['link_layer_address']
-            mac_addr.append(ll)
-    return mac_addr
+            arp_table[ip] = ll
+
+    return arp_table
 
 predirectory = os.listdir(directory)
 postdirectory = os.listdir(post_directory)
@@ -75,22 +69,14 @@ for filename in os.listdir(directory):
             if a == 0 or isBlank(output) == True:
                 pre = 0
                 preIP = 0
-                preMAC = 0
 
             else:
                 output = dev.parse(command, output=output)
                 pre = len(output["interfaces"])
                 preIP = returnIP(output)
-                preMAC = returnLL(output)
 
 
                 count = count + 1
-
-
-        print('=============================================================')
-        print('===================== '+ device_name + ' tests ===============')
-
-
 
         with open(post_filename, newline='') as f:
             output = f.read()
@@ -99,12 +85,14 @@ for filename in os.listdir(directory):
             if a == 0 or isBlank(output) == True:
                 post = 0
                 postIP = 0
-                postMAC = 0
             else:
                 output = dev.parse(command, output=output)
                 post = len(output["interfaces"])
                 postIP = returnIP(output)
-                postMAC = returnLL(output)
+
+
+            print('=============================================================')
+            print('===================== '+ device_name + ' tests ===============')
 
 
             if pre == post:
@@ -122,18 +110,12 @@ for filename in os.listdir(directory):
                 test2passcount = test2passcount + 1
                 print("TEST 2 PASS: ARP table entries for IP address are the same on device: " + device_name + " for VRF: " + vrf)
             elif preIP != postIP:
-                print("TEST 2 FAIL: ARP table for the IP address are different post upgrade on device: " + device_name + " for VRF: " + vrf)
+                print("TEST 2 FAIL: ARP table for the IP/MAC address mappings are different post upgrade on device: " + device_name + " for VRF: " + vrf + "See changed entries below: ")
                 test2failcount = test2failcount + 1
-                print(preIP)
-                print(postIP)
-            if preMAC == postMAC:
-                test3passcount = test3passcount + 1
-                print("TEST 3 PASS: ARP table entries for the layer 2 mac-address are the same on device: " + device_name + " for VRF: " + vrf)
-            elif preMAC != postMAC:
-                test3failcount = test3failcount + 1
-                print("TEST 3 FAIL: ARP table entries for the layer 2 mac-address are different post upgrade on device: " + device_name + " for VRF: " + vrf +" May indicate a hardware change!")
-                print(preMAC)
-                print(postMAC)
+                for diff in list(dictdiffer.diff(preIP, postIP)):
+                    print(diff)
+
+
     else:
         continue
 
