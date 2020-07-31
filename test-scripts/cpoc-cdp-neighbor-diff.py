@@ -2,11 +2,13 @@ from genie.conf.base import Device
 import json
 import fnmatch
 import dictdiffer
+import os
+
 
 dev = Device(name='aName', os='ios')
-dev.custom.abstraction = {'order':['os']}# Connect to device
+dev.custom.abstraction = {'order':['os']}
 
-import os
+
 directory = './verifications/pre_upgrade/'
 post_directory = './verifications/post_upgrade/'
 count = 0
@@ -17,6 +19,8 @@ def isBlank(myString):
         return False
     #myString is None OR myString is empty or blank
     return True
+
+
 print("Starting checks...")
 
 
@@ -25,7 +29,6 @@ def returnIP(CDPTable):
     for key in CDPTable['index']:
         hostname =  CDPTable['index'][key]['device_id']
         for ipkey in CDPTable['index'][key]['management_addresses']:
-
             iplist[hostname] = ipkey
 
     return iplist
@@ -65,6 +68,11 @@ for filename in os.listdir(directory):
             else:
                 continue
 
+# RUNNING TESTS AND OUTPUT TO USER
+
+            print('=============================================================')
+            print('===================== '+ device_name + ' tests ===============')
+
 
             if pre == post:
                 print("PASS: CDP neighbors count are the same on device: " + device_name +"   "+ str(pre) +"/"+ str(post))
@@ -84,4 +92,10 @@ for filename in os.listdir(directory):
     else:
         continue
 
+# CONFIRMATION OF FILES PROCESSED
+x=0
+while x < 5:
+    print("==================================")
+    x = x +1
+    
 print(str(count) + " files processed")

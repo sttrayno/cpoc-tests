@@ -2,7 +2,10 @@ from genie.conf.base import Device
 import json
 import fnmatch
 import dictdiffer
+import os
 
+
+# INITALISE COUNTERS
 
 test1passcount = 0
 test1failcount = 0
@@ -13,13 +16,21 @@ test2failcount = 0
 test3passcount = 0
 test3failcount = 0
 
+count = 0
+
+#
 
 dev = Device(name='aName', os='ios')
 dev.custom.abstraction = {'order':['os']}# Connect to device
-count = 0
-import os
+
+# SET DIRECTORIES, COULD BE TAKEN IN AS CMD ARG
+
 directory = './verifications/pre_upgrade/'
 post_directory = './verifications/post_upgrade/'
+
+predirectory = os.listdir(directory)
+postdirectory = os.listdir(post_directory)
+
 
 def isBlank(myString):
     if myString and myString.strip():
@@ -38,11 +49,10 @@ def returnIP(arpTable):
 
     return arp_table
 
-predirectory = os.listdir(directory)
-postdirectory = os.listdir(post_directory)
-
 def Diff(li1, li2):
     return (list(set(li1) - set(li2)))
+
+# CHECK FOR DIFFERENCES IN FILES BETWEEN PRE AND POST DIRECTORIES
 
 print(Diff(postdirectory, postdirectory))
 
@@ -91,6 +101,9 @@ for filename in os.listdir(directory):
                 postIP = returnIP(output)
 
 
+# RUNNING TESTS AND OUTPUT TO USER
+
+
             print('=============================================================')
             print('===================== '+ device_name + ' tests ===============')
 
@@ -126,7 +139,5 @@ while x < 5:
 
 print("TEST 1 ARP table entry checking Pass count: " + str(test1passcount))
 print("TEST 1 ARP table entry checking fail count: " + str(test1failcount))
-print("TEST 2 IP consistency check Pass count: " + str(test2passcount))
-print("TEST 2 IP consistency check fail count: " + str(test2failcount))
-print("TEST 3 L2 consistency check Passcount: " + str(test3passcount))
-print("TEST 3 L2 consistency check fail count: " + str(test3failcount))
+print("TEST 2 IP/MAC consistency check Pass count: " + str(test2passcount))
+print("TEST 2 IP/MAC consistency check fail count: " + str(test2failcount))
