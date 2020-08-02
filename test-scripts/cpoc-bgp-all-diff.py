@@ -1,7 +1,9 @@
 from genie.conf.base import Device
 import json
 import fnmatch
+import dictdiffer
 import os
+
 
 # INITALISE COUNTERS
 
@@ -37,6 +39,15 @@ def isBlank(myString):
     return True
 print("Starting checks...")
 
+def getRoutes(bgpAll):
+    bgpRoutes = {}
+    for vrf in bgpAll['vrf']:
+        vrfName = vrf
+        for route in bgpAll['vrf'][vrf]['address_family']:
+            for routeid in bgpAll['vrf'][vrf]['address_family'][route]['routes']:
+                bgpRoutes[vrfName] = routeid
+    return bgpRoutes
+
 for filename in os.listdir(directory):
     if fnmatch.fnmatch(filename, "*show_bgp_all_RAW.txt"):
         pre_filename = directory + filename
@@ -56,7 +67,7 @@ for filename in os.listdir(directory):
             output = f.read()
             if  isBlank(output) == False:
                 output = dev.parse(command, output=output)
-                print(output["vrf"])
+                pre_bgpAll = getRoutes(output)
             else:
                 continue
 
@@ -64,11 +75,18 @@ for filename in os.listdir(directory):
             output = f.read()
             if isBlank(output) == False:
                 output = dev.parse(command, output=output)
-                print(output["vrf"])
+                post_bgpAll = getRoutes(output)
+
             else:
                 continue
 
+        if pre_bgpAll == post_bgpAll:
+            print("TEST - PASS: The port-channels configured and operational statuses are the same pre and post upgrade. No further action required.")
+        elif pre_bgpAll != post_bgpAll:
+            print("TEST - FAIL: There is some inconsistencies between pre/post state of the port channel config, see details of differences below.")
 
-        continue
+            for diff in list(dictdiffer.diff(pre_bgpAll, post_bgpAll)):
+                print(diff)
+
     else:
         continue
