@@ -31,6 +31,8 @@ These scripts have Python requirements that must be installed before the script 
 pip install requirements.txt
 ```
 
+### Tests
+
 #### ARP Table checking
 
 This script looks to read all ouputs from "show ip arp vrf" from the pre and post directories and runs two tests. The first which counts how many entries the ARP table has pre and post test and a second test which takes the IP to MAC mappings and stores them in a specific dictionary. This then does a comparison to check which elements are missing or have been changed. You might expect this to fail if hardware has been migrated,
