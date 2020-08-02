@@ -1,4 +1,4 @@
-# cpoc-tests
+# Collection of CPOC pyATS tests
 
 This repo contains a collection of pre/post validation checks for migrations build ontop of the pyATS framework
 
