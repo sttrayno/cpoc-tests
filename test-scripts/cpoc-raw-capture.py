@@ -25,7 +25,7 @@ for x in range(len(data)):
 
     rawoutput = dev.execute(cmd)
 
-    f1= open(filenameraw,"w+")
+    f1 = open(filenameraw,"w+")
 
     f1.write(str(rawoutput))
     f2.write(str(devoutput))
