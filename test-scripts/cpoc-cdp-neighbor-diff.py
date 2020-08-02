@@ -4,14 +4,30 @@ import fnmatch
 import dictdiffer
 import os
 
+# INITALISE COUNTERS
+
+test1passcount = 0
+test1failcount = 0
+
+test2passcount = 0
+test2failcount = 0
+
+filecount = 0
+
+# Connect to 'dummy' pyats device
 
 dev = Device(name='aName', os='ios')
 dev.custom.abstraction = {'order':['os']}
 
+# SET DIRECTORIES, COULD BE TAKEN IN AS CMD ARG
 
 directory = './verifications/pre_upgrade/'
 post_directory = './verifications/post_upgrade/'
-count = 0
+
+predirectory = os.listdir(directory)
+postdirectory = os.listdir(post_directory)
+
+# Check if file is blank before reading and processing
 
 def isBlank(myString):
     if myString and myString.strip():
@@ -23,6 +39,7 @@ def isBlank(myString):
 
 print("Starting checks...")
 
+# Extract neighbor information from the show CDP output and place device_id and management address into a dictionary for later comparison
 
 def returnIP(CDPTable):
     iplist = {}
@@ -33,6 +50,7 @@ def returnIP(CDPTable):
 
     return iplist
 
+# Open each file in pre/post dictionary and select all show cdp neighbors detail outputs
 
 for filename in os.listdir(directory):
     if fnmatch.fnmatch(filename, "*show_cdp_neighbors_detail*_RAW.txt"):
@@ -49,13 +67,13 @@ for filename in os.listdir(directory):
 
         command = command.replace("_"," ")
 
-        with open(pre_filename, newline='') as f:                        # Open show command list
+        with open(pre_filename, newline='') as f:
             output = f.read()
             if  isBlank(output) == False:
                 output = dev.parse(command, output=output)
                 preIP = returnIP(output)
                 pre = len(output["index"])
-                count = count + 1
+                filecount += 1
             else:
                 continue
 
@@ -75,16 +93,16 @@ for filename in os.listdir(directory):
 
 
             if pre == post:
-                print("PASS: CDP neighbors count are the same on device: " + device_name +"   "+ str(pre) +"/"+ str(post))
+                print("TEST 1 - PASS: CDP neighbors count are the same on device: " + device_name + "   " + str(pre) +"/"+ str(post))
             elif pre < post:
-                print("FAIL: CDP neighbors count pre-upgrade: " + str(pre) + " is less than the post-upgrade state: " + str(post) + " on device: " + device_name)
+                print("TEST 1 - FAIL: CDP neighbors count pre-upgrade: " + str(pre) + " is less than the post-upgrade state: " + str(post) + " on device: " + device_name)
             elif post < pre:
-                print("FAIL: CDP neighbors count in post-upgrade: " + str(post) + " is less than the pre-upgrade state: " + str(pre) + " on device: " + device_name)
+                print("TEST 1 - FAIL: CDP neighbors count in post-upgrade: " + str(post) + " is less than the pre-upgrade state: " + str(pre) + " on device: " + device_name)
 
             if preIP == postIP:
-                print("PASS: CDP neighbors are the same on device post upgade")
+                print("TEST 1 - PASS: CDP neighbors device_ID and IP information are the same on device post upgade")
             elif preIP != postIP:
-                print("FAIL: CDP neighbors on device are different post upgrade, this may be expected if you've had a hardware change, see differences below: ")
+                print("TEST 1 - FAIL: CDP neighbors on device are different post upgrade, this may be expected if you've had a hardware change, see differences below: ")
                 for diff in list(dictdiffer.diff(preIP, postIP)):
                     print(diff)
 
@@ -97,5 +115,5 @@ x=0
 while x < 5:
     print("==================================")
     x = x +1
-    
-print(str(count) + " files processed")
+
+print(str(filecount) + " files processed")

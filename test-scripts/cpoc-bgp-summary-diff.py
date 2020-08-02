@@ -1,12 +1,33 @@
 from genie.conf.base import Device
 import json
 import fnmatch
+import os
+# INITALISE COUNTERS
 
+test1passcount = 0
+test1failcount = 0
+
+test2passcount = 0
+test2failcount = 0
+
+filecount = 0
+
+# Connect to 'dummy' pyats device
 
 dev = Device(name='aName', os='ios')
 dev.custom.abstraction = {'order':['os']}# Connect to device
-count = 0
-import os
+
+
+# SET DIRECTORIES, COULD BE TAKEN IN AS CMD ARG
+
+directory = './verifications/pre_upgrade/'
+post_directory = './verifications/post_upgrade/'
+
+predirectory = os.listdir(directory)
+postdirectory = os.listdir(post_directory)
+
+# Check if file is blank before reading and processing
+
 directory = './verifications/pre_upgrade/'
 post_directory = './verifications/post_upgrade/'
 
@@ -18,6 +39,9 @@ def isBlank(myString):
     return True
 print("Starting checks...")
 
+
+# Extract all BGP neigbors from the dictionary and sort into ordered list for later comparison
+
 def getBGPneighbors(bgpSummary):
     neighbors = []
     for key in bgpSummary['vrf']['default']['neighbor']:
@@ -26,17 +50,23 @@ def getBGPneighbors(bgpSummary):
         neighbors.sort()
     return neighbors
 
+# Open each file for show bgp all summary
 
 for filename in os.listdir(directory):
     if fnmatch.fnmatch(filename, "*show_bgp_all_summary*_RAW.txt"):
         pre_filename = directory + filename
         post_filename = post_directory + filename
+
         post_filename = post_filename.replace("pre","post", 1)
+
         command = filename
         command = command[:-8]
-        indx = command.find("show")#position of 'I'
+
+        indx = command.find("show")
+
         device_name = filename[:indx]
         command = command[indx:]
+
         device_name = device_name.replace("pre_","",1)
         device_name = device_name.replace("post_","",1)
 
@@ -49,7 +79,7 @@ for filename in os.listdir(directory):
                 pre = len(output["vrf"]["default"]["neighbor"])
                 preNeighbors = getBGPneighbors(output)
 
-                count = count + 1
+                filecount += 1
 
             else:
                 continue
@@ -74,9 +104,9 @@ for filename in os.listdir(directory):
             if pre == post:
                 print("PASS: BGP neigbors check on device: " + device_name + " both versions have " + str(post) + " neighbors")
             elif pre < post:
-                print("FAIL: BGP has gained a neighbor from upgrade on device: " + device_name)
+                print("FAIL: BGP has gained neighbor(s) from upgrade on device: " + device_name)
             elif post < pre:
-                print("FAIL: BGP has lost a neighbor from upgrade on device: " + device_name)
+                print("FAIL: BGP has lost neighbor(s) from upgrade on device: " + device_name)
 
 
             if preNeighbors == postNeighbors:

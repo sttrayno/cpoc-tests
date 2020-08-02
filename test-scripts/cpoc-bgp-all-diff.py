@@ -1,14 +1,33 @@
 from genie.conf.base import Device
 import json
 import fnmatch
+import os
 
+# INITALISE COUNTERS
+
+test1passcount = 0
+test1failcount = 0
+
+test2passcount = 0
+test2failcount = 0
+
+filecount = 0
+
+# Connect to 'dummy' pyats device
 
 dev = Device(name='aName', os='ios')
 dev.custom.abstraction = {'order':['os']}# Connect to device
 
-import os
+
+# SET DIRECTORIES, COULD BE TAKEN IN AS CMD ARG
+
 directory = './verifications/pre_upgrade/'
 post_directory = './verifications/post_upgrade/'
+
+predirectory = os.listdir(directory)
+postdirectory = os.listdir(post_directory)
+
+# Check if file is blank before reading and processing
 
 def isBlank(myString):
     if myString and myString.strip():

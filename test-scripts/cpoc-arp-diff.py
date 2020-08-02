@@ -13,15 +13,12 @@ test1failcount = 0
 test2passcount = 0
 test2failcount = 0
 
-test3passcount = 0
-test3failcount = 0
+filecount = 0
 
-count = 0
-
-#
+# Connect to 'dummy' pyats device
 
 dev = Device(name='aName', os='ios')
-dev.custom.abstraction = {'order':['os']}# Connect to device
+dev.custom.abstraction = {'order':['os']}
 
 # SET DIRECTORIES, COULD BE TAKEN IN AS CMD ARG
 
@@ -31,6 +28,7 @@ post_directory = './verifications/post_upgrade/'
 predirectory = os.listdir(directory)
 postdirectory = os.listdir(post_directory)
 
+# Check if file is blank before reading and processing
 
 def isBlank(myString):
     if myString and myString.strip():
@@ -38,6 +36,8 @@ def isBlank(myString):
         return False
     #myString is None OR myString is empty or blank
     return True
+
+# Function for returning a dictionary of IP to MAC mappings for later comparison
 
 def returnIP(arpTable):
     arp_table = {}
@@ -48,6 +48,8 @@ def returnIP(arpTable):
             arp_table[ip] = ll
 
     return arp_table
+
+# Function for checking differences between two lists
 
 def Diff(li1, li2):
     return (list(set(li1) - set(li2)))
@@ -86,7 +88,7 @@ for filename in os.listdir(directory):
                 preIP = returnIP(output)
 
 
-                count = count + 1
+                filecount += 1
 
         with open(post_filename, newline='') as f:
             output = f.read()
@@ -109,22 +111,22 @@ for filename in os.listdir(directory):
 
 
             if pre == post:
-                test1passcount = test1passcount + 1
-                print("TEST 1 PASS: ARP table entrie count is the same on device: " + device_name + " for VRF: " + vrf + "     " +  str(pre) + " / " +  str(post))
+                test1passcount += 1
+                print("TEST 1 - PASS: ARP table entry count is the same on device: " + device_name + " for VRF: " + vrf + "     " +  str(pre) + " / " +  str(post))
             elif pre < post:
-                test1failcount = test1failcount + 1
-                print("TEST 1 FAIL: ARP table in pre-upgrade is less than the post-upgrade stateon device: " + device_name + " for VRF: " + vrf+ "     " + str(pre) + " / " + str(post))
+                test1failcount += 1
+                print("TEST 1 - FAIL: ARP table in pre-upgrade is less than the post-upgrade stateon device: " + device_name + " for VRF: " + vrf+ "     " + str(pre) + " / " + str(post))
             elif post < pre:
-                print("TEST 1 FAIL: ARP table in post-upgrade is less than the pre-upgrade state on device: " + device_name +" for VRF: " + vrf+ "     " + str(pre) + " / " + str(pre))
-                test1failcount = test1failcount + 1
+                print("TEST 1 - FAIL: ARP table in post-upgrade is less than the pre-upgrade state on device: " + device_name +" for VRF: " + vrf+ "     " + str(pre) + " / " + str(pre))
+                test1failcount += 1
 
 
             if preIP == postIP:
-                test2passcount = test2passcount + 1
-                print("TEST 2 PASS: ARP table entries for IP address are the same on device: " + device_name + " for VRF: " + vrf)
+                test2passcount += 1
+                print("TEST 2 - PASS: ARP table entries for IP/MAC address mappings are the same on device: " + device_name + " for VRF: " + vrf)
             elif preIP != postIP:
-                print("TEST 2 FAIL: ARP table for the IP/MAC address mappings are different post upgrade on device: " + device_name + " for VRF: " + vrf + "See changed entries below: ")
-                test2failcount = test2failcount + 1
+                print("TEST 2 - FAIL: ARP table for the IP/MAC address mappings are different post upgrade on device: " + device_name + " for VRF: " + vrf + "See changed entries below: ")
+                test2failcount += 1
                 for diff in list(dictdiffer.diff(preIP, postIP)):
                     print(diff)
 
@@ -137,7 +139,7 @@ while x < 5:
     print("==================================")
     x = x +1
 
-print("TEST 1 ARP table entry checking Pass count: " + str(test1passcount))
+print("TEST 1 ARP table entry checking pass count: " + str(test1passcount))
 print("TEST 1 ARP table entry checking fail count: " + str(test1failcount))
-print("TEST 2 IP/MAC consistency check Pass count: " + str(test2passcount))
+print("TEST 2 IP/MAC consistency check pass count: " + str(test2passcount))
 print("TEST 2 IP/MAC consistency check fail count: " + str(test2failcount))
