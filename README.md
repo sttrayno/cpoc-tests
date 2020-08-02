@@ -2,6 +2,8 @@
 
 This repo contains a collection of pre/post validation checks for migrations build ontop of the pyATS framework. These tests can be used post change of a network to ensure aspects of the device control plane are unchanged following a test. 
 
+These tests do not use the pyATS aetest framework as they're being used against static output however could be easily adapted to the aetest framework for pre/post checking.
+
 Today the tests included are:
 
 ```
