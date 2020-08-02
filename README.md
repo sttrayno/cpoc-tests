@@ -12,13 +12,27 @@ Etherchannel consistency
 CDP neighbours table validation
 ```
 
+### Pre-requsites
+
+For example
+
+```
+pre_device-show_cdp_neighbors_detail_RAW.txt
+
+```
 
 #### ARP Table checking
 
+This script looks to read all ouputs from "show ip arp vrf" from the pre and post directories and runs two tests. The first which counts how many entries the ARP table has pre and post test and a second test which takes the IP to MAC mappings and stores them in a specific dictionary. This then does a comparison to check which elements are missing or have been changed. You might expect this to fail if hardware has been migrated,
+
 #### BGP neighbours conistency
+
+This script takes the raw output from a "show bgp summary" and runs two tests. The first which tests how many neighbors a device has pre and post and makes a comparison and a second test which takes the actual neighbour ID's and does a comparison between pre and post check to see which elements have been added or are missing.
 
 #### BGP route validation
 
 #### Etherchannel consistency
+
+This script takes the raw output from "show etherchannel summary" and runs two tests. The first which checks how many port groups are configured on the device pre and post change. Then a second then extracts the name of the port-channel and its current status "up/down" and does a comparison between the pre and post state to check if the state is any different post change. If there are any changes this is shown to the user.
 
 #### CDP neigbours table validation
