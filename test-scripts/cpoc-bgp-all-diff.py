@@ -81,9 +81,9 @@ for filename in os.listdir(directory):
                 continue
 
         if pre_bgpAll == post_bgpAll:
-            print("TEST - PASS: The port-channels configured and operational statuses are the same pre and post upgrade. No further action required.")
+            print("TEST - PASS: The bgp routes learned are the same pre and post upgrade. No further action required.")
         elif pre_bgpAll != post_bgpAll:
-            print("TEST - FAIL: There is some inconsistencies between pre/post state of the port channel config, see details of differences below.")
+            print("TEST - FAIL: There is some inconsistencies between pre/post state of the BGP routes, see details of differences below.")
 
             for diff in list(dictdiffer.diff(pre_bgpAll, post_bgpAll)):
                 print(diff)
