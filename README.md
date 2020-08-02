@@ -19,10 +19,11 @@ To run this script you will need your raw outputs from the devices in two direct
 For example
 
 ```
-/pre_upgrade
-  pre_device-show_cdp_neighbors_detail_RAW.txt
-/post_upgrade
-  post_device-show_cdp_neighbors_detail_RAW.txt
+validations/
+  pre_upgrade/
+    pre_device-show_cdp_neighbors_detail_RAW.txt
+  post_upgrade/
+    post_device-show_cdp_neighbors_detail_RAW.txt
 ```
 
 These scripts have Python requirements that must be installed before the script will run. To this simply run the below command while in the same directory as our requirements.txt file.
