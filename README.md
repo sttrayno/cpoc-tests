@@ -14,7 +14,7 @@ CDP neighbours table validation
 
 ### Pre-requsites
 
-To run this script you will need your raw outputs from the devices in two directories `/pre_upgrade` and `post-upgrade`. Then ensure files within each directory adhere to the following format to ensure that our parsers sucessfully pick up your device outputs: <pre/post>_<device_name>_<command>_RAW.txt
+To run this script you will need your raw outputs from the devices in two directories `/pre_upgrade` and `post-upgrade`. Then ensure files within each directory adhere to the following format to ensure that our parsers sucessfully pick up your device outputs: ```<pre/post>_<device_name>_<command>_RAW.txt```
 
 For example
 
